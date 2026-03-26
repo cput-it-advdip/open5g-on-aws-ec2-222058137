@@ -1,86 +1,79 @@
-# Assignment 1: K3s Deployment on AWS
+# Assignment 1: Deploying K3s on AWS
 **Name:** Mpho Quinton Swele  
-**Student Number:** [Your Student Number]  
-**Course:** Advanced Diploma in IT (Communication Networks)
+**Student Number:** 222058137  
+**Course:** Advanced Diploma in IT (Communication Networks)  
 
 ---
 
-## 🏗 Architecture Explanation
+## 🏗 Architecture Overview
+
 ### What is K3s?
-K3s is a highly available, certified Kubernetes distribution designed for low-resource environments such as Edge, IoT, and 5G infrastructures. It is packaged as a single binary (<100MB) by removing legacy, alpha, and non-default features found in standard upstream Kubernetes.
+K3s is a streamlined and certified Kubernetes distribution specifically engineered for environments with limited computing resources. It is particularly suitable for use cases such as edge computing, Internet of Things (IoT), and modern 5G infrastructures. Unlike traditional Kubernetes, K3s is packaged as a compact single binary (less than 100MB), achieved by removing non-essential, legacy, and experimental components. This makes it significantly easier to deploy, manage, and maintain in constrained environments.
 
-### Key Components
-* **Control Plane:** The brain of the cluster, containing the API Server (entry point), Scheduler (assigns pods), and Controller Manager (maintains desired state).
-* **Agents (Worker Nodes):** The hosts where the actual containerized workloads run.
-* **Container Runtime:** Uses **containerd** as a lightweight, industry-standard runtime.
-* **CNI (Flannel):** Manages the L3 networking fabric for Pod-to-Pod communication.
-* **Kine:** A shim that allows K3s to use **SQLite** (embedded) instead of the resource-heavy etcd, perfect for edge deployments.
-* **ServiceLB & Traefik:** Built-in Load Balancer and Ingress controller for exposing services.
+### Core Components
+* **Control Plane (Server Node):** This acts as the central management unit of the cluster. It includes the Kubernetes API Server, the Scheduler, and the Controller Manager.
+* **Worker Nodes (Agents):** These nodes execute the actual workloads by running containerized applications deployed within the cluster.
+* **Container Runtime:** K3s utilizes **containerd**, a lightweight runtime that efficiently handles container lifecycle operations.
+* **Container Networking Interface (CNI):** The default solution, **Flannel**, enables communication between pods across different nodes via a Layer 3 VXLAN overlay.
+* **Kine (Datastore Layer):** Instead of the resource-intensive etcd, K3s uses Kine to integrate with lightweight databases like **SQLite**.
+* **Built-in Services:** Includes an embedded load balancer (ServiceLB) and **Traefik** as the ingress controller.
 
 ---
 
-## 🖥 System Requirements
-The following AWS EC2 specifications were used to ensure a stable hybrid environment:
+## 🖥 System Specifications
+To build a functional and stable hybrid cloud setup, the following AWS EC2 configurations were selected:
 
-| Requirement | Control Plane (Server) | Agent (Worker) |
+| Requirement | Control Plane (Server) | Worker Node (Agent) |
 | :--- | :--- | :--- |
 | **Instance Type** | t3.medium | t3.small |
 | **vCPU** | 2 | 1 |
-| **RAM** | 4 GB | 2 GB |
+| **Memory (RAM)** | 4 GB | 2 GB |
 | **Storage** | 20 GB gp3 SSD | 20 GB gp3 SSD |
-| **OS** | Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
+| **Operating System**| Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
 
 ---
 
-## 🛠 Installation Steps & Commands
+## 🛠 Deployment Process
 
-### 1. Provisioning & Security
-Configured an AWS VPC with a Security Group allowing:
-* `6443/tcp`: Kubernetes API Server
-* `8472/udp`: Flannel VXLAN
-* `10250/tcp`: Kubelet metrics
+### 1. Infrastructure Provisioning and Security Configuration
+An AWS Virtual Private Cloud (VPC) was configured to host the cluster. Security Groups were defined to allow the following essential traffic:
+* **6443/tcp** – Kubernetes API Server
+* **8472/udp** – Flannel VXLAN networking
+* **10250/tcp** – Kubelet metrics and node management
 
+---
 
+## 📸 Deployment Evidence
 
-### 3. Evidence of Deployment
+### 3.1 Cluster Node Status
+The cluster verification output demonstrates that both the control plane and worker node are in a **Ready** state.
+![Nodes Status](nodes_status.png)
 
-## 3.1 Cluster Node Status (Master and Worker)
-This screenshot confirms that the K3s cluster is operational. It shows both the Control Plane and the Worker node in a **Ready** status, running the latest K3s version.
-![Nodes Status](img/nodes_status.png)
+### 3.2 System Pods and Networking
+This highlights critical system pods (CoreDNS, Metrics Server, Traefik) operating correctly within the `kube-system` namespace.
+![Pods Status](pods_status.png)
 
-## 3.2 System Pods and Networking Status
-The following output shows all system-level pods (CoreDNS, Metrics Server, and Traefik) running across the namespace. This confirms that the internal networking (Flannel) and Ingress (Traefik) are fully functional.
-![Pods Status](img/pods_status.png)
+### 3.3 AWS EC2 Console View
+The AWS Management Console shows the active EC2 instances running in the `us-east-1` region.
+![AWS Console](aws_console.png)
 
-## 3.3 AWS EC2 Management Console
-This view from the AWS Console shows the two active EC2 instances (**t3.medium** for the Master and **t3.micro** for the Worker) in the `running` state within the `us-east-1` region.
-![AWS Console](img/aws_console.png)
+### 3.4 Installation Output from Terminal
+This confirms the successful execution of installation and node join commands from the local CLI.
+![Terminal Output](terminal_output.png)
 
-## 3.4 Terminal Installation Output
-This screenshot captures the final terminal output after running the K3s installation and join commands, showing the successful communication between the local PowerShell environment and the AWS cloud instances.
-![Terminal Output](img/terminal_output.png)
+---
 
+## 🔍 Technical Reflection
 
-### 4. Technical Reflection
+### 4.1 Knowledge Gained and Skills Development
+This assignment offered valuable insight into the practical implementation of cloud-native technologies. I developed hands-on experience working with AWS VPCs, routing tables, and Security Groups. Understanding the distinction between the control plane and worker nodes helped clarify how Kubernetes achieves high availability.
 
-## 4.1 Lessons Learned and Technical Growth
-This assignment provided a comprehensive look into the lifecycle of a cloud-native deployment. I learned that the functionality of a Kubernetes cluster is deeply dependent on the underlying infrastructure's networking configuration. Beyond just running installation scripts, I gained hands-on experience in managing **AWS Security Groups**, **VPC routing**, and **secure node-to-node authentication** using cluster tokens. Understanding the distinction between the **Control Plane (Master)** and the **Agent (Worker)** has clarified how distributed systems maintain high availability and state across multiple virtual machines.
+### 4.2 Challenges Encountered and Solutions Applied
+* **GitHub 403 Error:** Encountered a "Permission Denied" error when pushing updates. Resolved by correctly re-linking the local Git origin to my specific assigned repository.
+* **Connection Timeouts:** The worker node initially failed to join the master. After auditing AWS Security Groups, I identified that ports **6443** and **8472** were closed. Opening these ports allowed the worker to join immediately.
 
-## 4.2 Challenges and Resolutions
-The most significant challenge I encountered was a **"Permission Denied (403)"** error when attempting to push my progress to the GitHub repository. Initially, I believed this was a local credential issue, but after troubleshooting, I realized it was due to a lack of write access to the organization’s template. I resolved this by ensuring my local environment was correctly mapped to my personal GitHub Classroom repository.
+### 4.3 Role of K3s in 5G and Cloud-Native Environments
+K3s is vital for 5G "Edge" processing. By replacing etcd with **SQLite**, K3s reduces the resource footprint, making it suitable for running **Containerized Network Functions (CNFs)** like the User Plane Function (UPF) on low-power hardware near cell towers.
 
-Technically, I also faced a **Connection Timeout** while joining the worker node to the master. By auditing the AWS Security Groups, I discovered that **Port 6443 (K3s API)** and **UDP Port 8472 (Flannel VXLAN)** were not explicitly permitted. Once these inbound rules were applied to the master’s private IP range, the worker joined successfully and shifted to a "Ready" state. This highlighted the importance of **"Security by Design"** in cloud environments.
-
-## 4.3 K3s, 5G Cloud-Native, and Production Kubernetes
-K3s is a cornerstone of **5G Cloud-Native architecture**. In a production 5G ecosystem, low-latency processing must occur at the **"Edge"**—locations near cell towers where hardware resources (CPU/RAM) are limited. Standard Kubernetes (K8s) is often too resource-intensive for these sites. 
-
-
-
-K3s provides a lightweight, CNCF-compliant alternative that replaces the heavy etcd database with **SQLite**, allowing us to manage **Containerized Network Functions (CNFs)** with minimal overhead. This ensures that 5G services like the User Plane Function (UPF) can run efficiently on smaller, cost-effective hardware while maintaining the same orchestration power as a full-scale production cluster.
-
-## 4.4 Virtualization and Containerization for Scalability
-Virtualization and containerization work in tandem to enable scalable, elastic services. **Virtualization** (via AWS EC2) allows us to abstract physical hardware into multiple isolated virtual machines, providing the flexible foundation needed to deploy a cluster in minutes. **Containerization** (via K3s/containerd) then allows us to package applications and their dependencies into lightweight units that can be deployed across those virtual machines.
-
-
-
-This combination enables **horizontal scaling**; if user demand on a 5G network spikes, we can programmatically provision new EC2 instances (Virtualization) and instantly deploy new pods (Containerization) to handle the traffic. This synergy is what allows modern cloud services to remain resilient, portable, and capable of scaling from a single user to millions seamlessly.
+### 4.4 Scalability Through Virtualization and Containerization
+Virtualization (AWS EC2) provides hardware abstraction, while Containerization (K3s) ensures application portability. Together, they allow for **Horizontal Scaling**—dynamically launching containers and instances to handle 5G traffic spikes while maintaining cost efficiency.
