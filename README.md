@@ -47,19 +47,20 @@ An AWS Virtual Private Cloud (VPC) was configured to host the cluster. Security 
 
 ### 3.1 Cluster Node Status
 The cluster verification output demonstrates that both the control plane and worker node are in a **Ready** state.
-![Nodes Status](nodes_status.png)
+![Nodes Status]<img width="950" height="948" alt="nodes_status png" src="https://github.com/user-attachments/assets/ca0eeca3-59a4-4b82-880e-49a48185271b" />
+
 
 ### 3.2 System Pods and Networking
 This highlights critical system pods (CoreDNS, Metrics Server, Traefik) operating correctly within the `kube-system` namespace.
-![Pods Status](pods_status.png)
+![Pods Status]<img width="951" height="950" alt="pods_status png" src="https://github.com/user-attachments/assets/2ab93afb-ea6c-495a-a285-b390c06d805f" />
+
 
 ### 3.3 AWS EC2 Console View
 The AWS Management Console shows the active EC2 instances running in the `us-east-1` region.
-![AWS Console](aws_console.png)
+![AWS Console]<img width="1911" height="944" alt="aws_coonsole png" src="https://github.com/user-attachments/assets/d0ac888b-e662-4a02-a2df-ed192800592a" />
 
-### 3.4 Installation Output from Terminal
-This confirms the successful execution of installation and node join commands from the local CLI.
-![Terminal Output](terminal_output.png)
+
+
 
 ---
 
