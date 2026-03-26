@@ -1,7 +1,8 @@
 # Assignment 1: Deploying K3s on AWS
-**Name:** Mpho Quinton Swele  
+
+**Name:** Luchwayito Bokweni
 **Student Number:** 222058137  
-**Course:** Advanced Diploma in IT (Communication Networks)  
+Advanced Diploma in IT 
 
 ---
 
@@ -20,16 +21,15 @@ K3s is a streamlined and certified Kubernetes distribution specifically engineer
 
 ---
 
-## 🖥 System Specifications
-To build a functional and stable hybrid cloud setup, the following AWS EC2 configurations were selected:
+## 2. Infrastructure Specifications
 
-| Requirement | Control Plane (Server) | Worker Node (Agent) |
-| :--- | :--- | :--- |
-| **Instance Type** | t3.medium | t3.small |
-| **vCPU** | 2 | 1 |
-| **Memory (RAM)** | 4 GB | 2 GB |
-| **Storage** | 20 GB gp3 SSD | 20 GB gp3 SSD |
-| **Operating System**| Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
+The following AWS EC2 instances were provisioned to support the HA cluster:
+
+| Component | Role           | Instance Type | Resources         | OS            |
+|----------|----------------|--------------|-------------------|---------------|
+| Master-1 | Initial Leader | t3.large     | 2 vCPU / 8GB RAM  | Ubuntu 22.04  |
+| Master-2 | HA Peer        | t3.large     | 2 vCPU / 8GB RAM  | Ubuntu 22.04  |
+| Master-3 | HA Peer        | t3.large     | 2 vCPU / 8GB RAM  | Ubuntu 22.04  |
 
 ---
 
