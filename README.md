@@ -6,7 +6,7 @@ Advanced Diploma in IT
 
 ---
 
-## 🏗 Architecture Overview
+## Architecture Overview
 
 ### What is K3s?
 K3s is a streamlined and certified Kubernetes distribution specifically engineered for environments with limited computing resources. It is particularly suitable for use cases such as edge computing, Internet of Things (IoT), and modern 5G infrastructures. Unlike traditional Kubernetes, K3s is packaged as a compact single binary (less than 100MB), achieved by removing non-essential, legacy, and experimental components. This makes it significantly easier to deploy, manage, and maintain in constrained environments.
